@@ -188,13 +188,13 @@
   }
 
   .card{
-    width:150px;
+    width:210px;
     background:#fff;
     border-radius:16px;
     border:3px solid #f4c9d6;
     box-shadow:0 10px 18px rgba(0,0,0,.18);
-    padding:10px;
-    text-align:center;
+    padding:12px 14px;
+    text-align:left;
     touch-action:none;
     cursor:grab;
     position:relative;
@@ -205,22 +205,36 @@
     box-shadow:0 0 0 4px rgba(244,166,61,.3), 0 10px 18px rgba(0,0,0,.18);
   }
   .card.dragging{cursor:grabbing;filter:drop-shadow(0 14px 14px rgba(0,0,0,.3));}
-  .card .blister{
-    width:100%;
-    height:78px;
-    border-radius:10px;
-    background:linear-gradient(160deg,#dfe6ee,#c7d0da);
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    grid-template-rows:repeat(2,1fr);
-    gap:4px;
-    padding:8px;
-    margin-bottom:8px;
+  .scenario-tag{
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:#8aa2b0;
+    margin-bottom:4px;
   }
-  .card .blister span{
-    background:radial-gradient(circle at 35% 30%, #ffb9c9, #e8748f);
-    border-radius:50%;
-    box-shadow:inset -2px -2px 3px rgba(0,0,0,.15);
+  .scenario-text{
+    font-size:12.5px;
+    line-height:1.55;
+    color:#2c3e42;
+    font-weight:500;
+    margin-bottom:10px;
+    min-height:58px;
+  }
+  .drug-answer{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border-top:1px dashed #e3e9ed;
+    padding-top:9px;
+  }
+  .pillicon{
+    flex:none;
+    font-size:22px;
+    width:36px;height:36px;
+    border-radius:10px;
+    background:#fdeef2;
+    display:flex;align-items:center;justify-content:center;
   }
   .card .name{
     font-size:13px;
@@ -371,16 +385,16 @@
 
   <div class="headbar">
     <div class="avatar">🧑‍⚕️</div>
-    <h1>Sort the Medicine Basket (ตะกร้าแยกยา ให้ถูก)</h1>
+    <h1>What Basket Does It Belong In? (สถานการณ์ยา ควรอยู่ตะกร้าไหน)</h1>
     <div class="icons">💊🧴</div>
   </div>
 
-  <div class="instruction">Drag the medicine card into the correct basket! (ลากการ์ดยาไปวางในตะกร้าที่ถูกต้อง!)</div>
+  <div class="instruction">Read the situation, decide the right medicine, then drag it into the correct basket! (อ่านสถานการณ์ คิดว่าควรใช้ยาตัวไหน แล้วลากไปตะกร้าที่ถูกต้อง)</div>
 
   <div class="playarea" id="playarea">
 
-    <div class="binwrap" id="binRed" data-type="antibiotic">
-      <div class="bubble red">Antibiotics – Use as Directed<br>(ยาปฏิชีวนะ – ใช้ตามคำแนะนำ)</div>
+    <div class="binwrap" id="binRed" data-type="dangerous">
+      <div class="bubble red">Dangerous Drug – Ask a Pharmacist<br>(ยาอันตราย – ต้องปรึกษาเภสัชกร)</div>
       <div style="position:relative;width:100%;">
         <svg class="bin" viewBox="0 0 220 200">
           <defs>
@@ -398,18 +412,21 @@
           <ellipse cx="110" cy="72" rx="76" ry="15" fill="#e2493d" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
           <ellipse cx="110" cy="72" rx="66" ry="10" fill="#c73a2f"/>
         </svg>
-        <div class="binlabel">Antibiotics<br>Use as Directed<br>(ยาปฏิชีวนะ)</div>
+        <div class="binlabel">Dangerous Drug<br>Ask a Pharmacist<br>(ยาอันตราย)</div>
       </div>
     </div>
 
     <div class="centercol">
       <div class="card" id="activeCard">
-        <div class="blister" id="blisterGrid">
-          <span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span>
+        <div class="scenario-tag">Situation (สถานการณ์)</div>
+        <div class="scenario-text" id="scenarioText">มีไข้สูง ปวดศีรษะ ปวดเมื่อยตัว</div>
+        <div class="drug-answer">
+          <div class="pillicon">💊</div>
+          <div>
+            <div class="name" id="cardName">Paracetamol 500mg</div>
+            <div class="namesub" id="cardSub">(ลดไข้/แก้ปวด)</div>
+          </div>
         </div>
-        <div class="name" id="cardName">Amoxicillin 500mg</div>
-        <div class="namesub" id="cardSub">(ยาฆ่าเชื้อ)</div>
       </div>
 
       <div class="deck" id="deckBtn">
@@ -419,8 +436,8 @@
       </div>
     </div>
 
-    <div class="binwrap" id="binGreen" data-type="relief">
-      <div class="bubble green">Symptom Relief – Use as Needed<br>(ยาบรรเทาอาการ – ใช้เมื่อจำเป็น)</div>
+    <div class="binwrap" id="binGreen" data-type="household">
+      <div class="bubble green">Household Remedy – Safe to Self-Use<br>(ยาสามัญประจำบ้าน – ใช้เองได้)</div>
       <div style="position:relative;width:100%;">
         <svg class="bin" viewBox="0 0 220 200">
           <defs>
@@ -438,7 +455,7 @@
           <ellipse cx="110" cy="72" rx="76" ry="15" fill="#69b854" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
           <ellipse cx="110" cy="72" rx="66" ry="10" fill="#438033"/>
         </svg>
-        <div class="binlabel">Symptom Relief<br>Use as Needed<br>(บรรเทาอาการ)</div>
+        <div class="binlabel">Household Remedy<br>Safe to Self-Use<br>(ยาสามัญประจำบ้าน)</div>
       </div>
     </div>
 
@@ -462,18 +479,21 @@
 
 <script>
 const items = [
-  {name:"Amoxicillin 500mg", sub:"ยาฆ่าเชื้อ", type:"antibiotic"},
-  {name:"Paracetamol 500mg", sub:"ยาลดไข้ / แก้ปวด", type:"relief"},
-  {name:"Co-amoxiclav (Augmentin)", sub:"ยาฆ่าเชื้อสูตรผสม", type:"antibiotic"},
-  {name:"Loratadine 10mg", sub:"ยาแก้แพ้", type:"relief"},
-  {name:"Doxycycline 100mg", sub:"ยาฆ่าเชื้อ", type:"antibiotic"},
-  {name:"Oral Rehydration Salts", sub:"ผงเกลือแร่", type:"relief"},
-  {name:"Dextromethorphan", sub:"ยาแก้ไอ", type:"relief"},
-  {name:"Ciprofloxacin 500mg", sub:"ยาฆ่าเชื้อ", type:"antibiotic"},
-  {name:"Antacid", sub:"ยาลดกรด", type:"relief"},
-  {name:"Azithromycin 250mg", sub:"ยาฆ่าเชื้อ", type:"antibiotic"},
-  {name:"Ibuprofen 400mg", sub:"ยาแก้ปวด / ลดไข้", type:"relief"},
-  {name:"Cephalexin 500mg", sub:"ยาฆ่าเชื้อ", type:"antibiotic"}
+  {scenario:"มีไข้สูง ปวดศีรษะ ปวดเมื่อยตัว", drug:"Paracetamol 500mg", sub:"ลดไข้ / แก้ปวด", type:"household"},
+  {scenario:"ท้องเสียถ่ายเหลวบ่อย เสี่ยงขาดน้ำ", drug:"Oral Rehydration Salts", sub:"ผงเกลือแร่", type:"household"},
+  {scenario:"แสบท้อง จุกเสียด กรดไหลย้อนเล็กน้อย", drug:"Antacid", sub:"ยาลดกรด", type:"household"},
+  {scenario:"มีแผลถลอกเล็กน้อย ต้องทำแผลเอง", drug:"Tincture Iodine", sub:"ยาฆ่าเชื้อที่แผล", type:"household"},
+  {scenario:"ผื่นคัน ยุงกัด ต้องการทาบรรเทาอาการคัน", drug:"Calamine Lotion", sub:"ทาแก้คัน", type:"household"},
+  {scenario:"ติดเชื้อทางเดินปัสสาวะ แพทย์วินิจฉัยว่าเป็นแบคทีเรีย", drug:"Ciprofloxacin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
+  {scenario:"ไซนัสอักเสบจากเชื้อแบคทีเรีย ต้องกินยาให้ครบคอร์ส", drug:"Doxycycline 100mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
+  {scenario:"แผลติดเชื้อรุนแรง แพทย์สั่งยาฆ่าเชื้อสูตรผสม", drug:"Co-amoxiclav (Augmentin)", sub:"ยาฆ่าเชื้อสูตรผสม", type:"dangerous"},
+  {scenario:"เจ็บคอเล็กน้อย ระคายคอ ไม่มีไข้", drug:"Throat Lozenges", sub:"ยาอมบรรเทาอาการเจ็บคอ", type:"household"},
+  {scenario:"เจ็บคอมาก มีไข้สูง ต่อมทอนซิลบวมมีหนอง สงสัยติดเชื้อแบคทีเรีย", drug:"Amoxicillin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
+  {scenario:"ปอดอักเสบไม่รุนแรง แพทย์สั่งยากลุ่มมาโครไลด์", drug:"Azithromycin 250mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
+  {scenario:"ติดเชื้อที่ผิวหนัง แพทย์สั่งยากลุ่มเซฟาโลสปอริน", drug:"Cephalexin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
+  {scenario:"แพ้อากาศ คัดจมูก จามบ่อย ต้องการยาแก้แพ้", drug:"Loratadine 10mg", sub:"ยาแก้แพ้", type:"dangerous"},
+  {scenario:"ปวดข้อ ปวดกล้ามเนื้อรุนแรง ต้องการยาแก้อักเสบ", drug:"Ibuprofen 400mg", sub:"ยาแก้ปวด / ลดไข้", type:"dangerous"},
+  {scenario:"ไอแห้งเรื้อรัง รบกวนการนอนหลับ", drug:"Dextromethorphan", sub:"ยาแก้ไอ", type:"dangerous"}
 ];
 
 let deck = [];
@@ -485,6 +505,7 @@ let armed = false;
 const activeCard = document.getElementById('activeCard');
 const cardName = document.getElementById('cardName');
 const cardSub = document.getElementById('cardSub');
+const scenarioText = document.getElementById('scenarioText');
 const binRed = document.getElementById('binRed');
 const binGreen = document.getElementById('binGreen');
 const scoreVal = document.getElementById('scoreVal');
@@ -527,7 +548,8 @@ function drawNext(){
     return;
   }
   current = deck.pop();
-  cardName.textContent = current.name;
+  scenarioText.textContent = current.scenario;
+  cardName.textContent = current.drug;
   cardSub.textContent = '(' + current.sub + ')';
   activeCard.style.visibility = 'visible';
   activeCard.style.transform = '';
@@ -597,9 +619,9 @@ activeCard.addEventListener('pointerup', (e) => {
   const moved = Math.abs(e.clientX - startX) > 6 || Math.abs(e.clientY - startY) > 6;
 
   if(overRed){
-    resolveDrop('antibiotic');
+    resolveDrop('dangerous');
   } else if(overGreen){
-    resolveDrop('relief');
+    resolveDrop('household');
   } else if(!moved){
     /* tap = arm/disarm for tap-to-place fallback */
     armed = !armed;
@@ -610,8 +632,8 @@ activeCard.addEventListener('pointerup', (e) => {
 });
 
 /* tap-to-place fallback on bins when card is armed */
-binRed.addEventListener('click', () => { if(armed) resolveDrop('antibiotic'); });
-binGreen.addEventListener('click', () => { if(armed) resolveDrop('relief'); });
+binRed.addEventListener('click', () => { if(armed) resolveDrop('dangerous'); });
+binGreen.addEventListener('click', () => { if(armed) resolveDrop('household'); });
 
 deckBtn.addEventListener('click', () => { if(!current) drawNext(); });
 nextBtn.addEventListener('click', () => { if(current) drawNext(); });
