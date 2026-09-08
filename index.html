@@ -655,10 +655,10 @@
     <div class="overlay-card">
       <div class="mascot">🧑‍⚕️</div>
       <h2>เกมแยกยา ให้ถูกตะกร้า</h2>
-      <p>อ่านอาการ แล้วลากยาไปใส่ตะกร้าที่ถูกต้อง<br>ง่าย ๆ แค่ดูรูปกับอาการ ไม่ต้องรู้ศัพท์แพทย์</p>
+      <p>อ่านอาการที่เห็นได้เอง แล้วลากยาไปใส่ตะกร้าที่ถูกต้อง<br>ถ้ามีสัญญาณอันตราย เช่น เป็นนาน บวมแดงลาม มีหนอง ไข้สูงไม่ลด ห้ามซื้อยาฆ่าเชื้อกินเอง</p>
       <div class="overlay-legend">
-        <div class="lg-red">🔴 ยาฆ่าเชื้อ<br>ต้องถามเภสัชกร</div>
-        <div class="lg-green">🟢 ยาสามัญ<br>ใช้เองได้</div>
+        <div class="lg-red">🔴 มีสัญญาณอันตราย<br>ต้องถามเภสัชกร/หมอ</div>
+        <div class="lg-green">🟢 อาการทั่วไป<br>ใช้เองได้</div>
       </div>
       <button class="bigbtn" id="startBtn">▶ เริ่มเล่น</button>
     </div>
@@ -676,49 +676,49 @@
 
 <script>
 const items = [
-  {scenario:"ตัวร้อน ปวดหัว ปวดเนื้อปวดตัว", drug:"Paracetamol 500mg", sub:"ลดไข้ / แก้ปวด", type:"household",
+  {scenario:"ตัวร้อนไม่มาก ปวดหัว ปวดเนื้อปวดตัว เป็นมา 1-2 วัน", drug:"Paracetamol 500mg", sub:"ลดไข้ / แก้ปวด", type:"household",
    icon:"🤒", anim:"anim-pulse", particles:[{e:"💦",cls:"p-riseFade",pos:"left:14%;top:6%;",delay:"0s"},{e:"💦",cls:"p-riseFade",pos:"right:14%;top:10%;",delay:".5s"}]},
 
-  {scenario:"ท้องเสีย ถ่ายบ่อย กลัวขาดน้ำ", drug:"ผงเกลือแร่ (ORS)", sub:"ชดเชยน้ำ/เกลือแร่", type:"household",
+  {scenario:"ถ่ายเหลว 2-3 ครั้ง ไม่มีไข้ ไม่มีมูกเลือดปน", drug:"ผงเกลือแร่ (ORS)", sub:"ชดเชยน้ำ/เกลือแร่", type:"household",
    icon:"🥴", anim:"anim-wiggle", particles:[{e:"💧",cls:"p-drip",pos:"left:30%;top:60%;",delay:"0s"},{e:"💧",cls:"p-drip",pos:"left:50%;top:60%;",delay:".35s"},{e:"💧",cls:"p-drip",pos:"left:68%;top:60%;",delay:".7s"}]},
 
-  {scenario:"แสบท้อง จุกเสียด", drug:"ยาลดกรด", sub:"บรรเทาแสบท้อง", type:"household",
+  {scenario:"แสบท้อง จุกเสียด หลังกินของมันของเผ็ด", drug:"ยาลดกรด", sub:"บรรเทาแสบท้อง", type:"household",
    icon:"😖", anim:"anim-shake", particles:[{e:"🔥",cls:"p-zap",pos:"left:50%;top:55%;transform:translateX(-50%);",delay:"0s"}]},
 
-  {scenario:"แผลถลอก ต้องทำแผลเอง", drug:"ยาใส่แผล (ทิงเจอร์ไอโอดีน)", sub:"ทาภายนอกแผล", type:"household",
+  {scenario:"หกล้ม แผลถลอกเล็กน้อย เลือดออกนิดหน่อย", drug:"ยาใส่แผล (ทิงเจอร์ไอโอดีน)", sub:"ทาภายนอกแผล", type:"household",
    icon:"🩹", anim:"anim-float", particles:[{e:"🩸",cls:"p-drip",pos:"left:56%;top:50%;",delay:"0s"}]},
 
-  {scenario:"ยุงกัด คันมาก", drug:"ยาคาลาไมน์", sub:"ทาแก้คัน", type:"household",
+  {scenario:"ยุงกัด คันมาก ผื่นแดงจุดเดียวไม่บวมมาก", drug:"ยาคาลาไมน์", sub:"ทาแก้คัน", type:"household",
    icon:"🦟", anim:"anim-float", particles:[{e:"✨",cls:"p-zap",pos:"left:30%;top:55%;",delay:"0s"},{e:"✨",cls:"p-zap",pos:"left:65%;top:60%;",delay:".3s"}]},
 
-  {scenario:"เจ็บคอนิดหน่อย ไม่มีไข้", drug:"ยาอมแก้เจ็บคอ", sub:"บรรเทาระคายคอ", type:"household",
+  {scenario:"เจ็บคอนิดหน่อย ไม่มีไข้ กลืนน้ำลายได้ปกติ", drug:"ยาอมแก้เจ็บคอ", sub:"บรรเทาระคายคอ", type:"household",
    icon:"😮", anim:"anim-pulse", particles:[{e:"💨",cls:"p-puff",pos:"left:60%;top:45%;",delay:"0s"}]},
 
-  {scenario:"คัดจมูก จามบ่อย แพ้อากาศ", drug:"ยาแก้แพ้", sub:"บรรเทาคัดจมูก/จาม", type:"household",
+  {scenario:"คัดจมูก จามบ่อย น้ำมูกใส ตอนอากาศเปลี่ยน", drug:"ยาแก้แพ้", sub:"บรรเทาคัดจมูก/จาม", type:"household",
    icon:"🤧", anim:"anim-shake", particles:[{e:"💦",cls:"p-puff",pos:"left:58%;top:45%;",delay:"0s"}]},
 
-  {scenario:"ปวดข้อ ปวดกล้ามเนื้อ", drug:"ยาแก้ปวด (ไอบูโพรเฟน)", sub:"บรรเทาปวด/ลดไข้", type:"household",
+  {scenario:"ปวดข้อ ปวดกล้ามเนื้อ หลังยกของหนัก/ทำงานหนัก", drug:"ยาแก้ปวด (ไอบูโพรเฟน)", sub:"บรรเทาปวด/ลดไข้", type:"household",
    icon:"🦵", anim:"anim-wiggle", particles:[{e:"⚡",cls:"p-zap",pos:"left:55%;top:55%;",delay:"0s"}]},
 
-  {scenario:"ไอแห้ง ไอตอนกลางคืน ไม่มีไข้", drug:"ยาแก้ไอ", sub:"บรรเทาอาการไอ", type:"household",
+  {scenario:"ไอแห้งเล็กน้อย ไม่มีไข้ ไม่มีเสมหะ", drug:"ยาแก้ไอ", sub:"บรรเทาอาการไอ", type:"household",
    icon:"😮‍💨", anim:"anim-bounce", particles:[{e:"💨",cls:"p-puff",pos:"left:62%;top:42%;",delay:"0s"},{e:"💨",cls:"p-puff",pos:"left:62%;top:42%;",delay:".5s"}]},
 
-  {scenario:"ปัสสาวะแสบขัด หมอตรวจแล้วบอกว่าติดเชื้อ สั่งยาฆ่าเชื้อให้กินให้ครบ", drug:"ยาฆ่าเชื้อ (Ciprofloxacin)", sub:"ต้องกินให้ครบตามหมอสั่ง", type:"dangerous",
+  {scenario:"ปัสสาวะแสบขัด ปัสสาวะขุ่นมีกลิ่นเหม็นผิดปกติ ปวดหลังร่วมด้วย", drug:"ยาฆ่าเชื้อ", sub:"ต้องให้เภสัชกร/แพทย์เป็นผู้จ่ายเท่านั้น", type:"dangerous",
    icon:"😣", anim:"anim-pulse", particles:[{e:"🦠",cls:"p-orbit",pos:"left:50%;top:50%;",delay:"0s"}]},
 
-  {scenario:"ไซนัสอักเสบจากเชื้อโรค หมอสั่งยาฆ่าเชื้อให้กินให้ครบ", drug:"ยาฆ่าเชื้อ (Doxycycline)", sub:"ต้องกินให้ครบตามหมอสั่ง", type:"dangerous",
+  {scenario:"น้ำมูกข้นเขียวเหลือง ปวดหน้าผาก/โหนกแก้ม นานเกิน 10 วันไม่หาย", drug:"ยาฆ่าเชื้อ", sub:"ต้องให้เภสัชกร/แพทย์เป็นผู้จ่ายเท่านั้น", type:"dangerous",
    icon:"🤧", anim:"anim-wiggle", particles:[{e:"🦠",cls:"p-orbit",pos:"left:50%;top:50%;",delay:"0s"}]},
 
-  {scenario:"แผลบวมแดงมีหนอง หมอสั่งยาฆ่าเชื้อให้กินให้ครบ", drug:"ยาฆ่าเชื้อ (Co-amoxiclav)", sub:"ต้องกินให้ครบตามหมอสั่ง", type:"dangerous",
+  {scenario:"แผลบวมแดงร้อน มีหนองไหล และลุกลามขยายใหญ่ขึ้นเรื่อยๆ", drug:"ยาฆ่าเชื้อ", sub:"ต้องให้เภสัชกร/แพทย์เป็นผู้จ่ายเท่านั้น", type:"dangerous",
    icon:"🤕", anim:"anim-shake", particles:[{e:"🦠",cls:"p-orbit",pos:"left:50%;top:50%;",delay:"0s"}]},
 
-  {scenario:"เจ็บคอมาก ไข้สูง ต่อมทอนซิลบวมมีหนอง หมอสั่งยาฆ่าเชื้อ", drug:"ยาฆ่าเชื้อ (Amoxicillin)", sub:"ต้องกินให้ครบตามหมอสั่ง", type:"dangerous",
+  {scenario:"เจ็บคอมาก กลืนน้ำลายแทบไม่ได้ ไข้สูง คอบวมแดงเห็นจุดขาวๆที่ต่อมทอนซิล", drug:"ยาฆ่าเชื้อ", sub:"ต้องให้เภสัชกร/แพทย์เป็นผู้จ่ายเท่านั้น", type:"dangerous",
    icon:"🌡️", anim:"anim-shake", particles:[{e:"🦠",cls:"p-orbit",pos:"left:50%;top:50%;",delay:"0s"}]},
 
-  {scenario:"ไอมีไข้ หมอฟังปอดแล้วบอกว่าปอดติดเชื้อ สั่งยาฆ่าเชื้อ", drug:"ยาฆ่าเชื้อ (Azithromycin)", sub:"ต้องกินให้ครบตามหมอสั่ง", type:"dangerous",
+  {scenario:"ไอมีเสมหะข้นเขียวเหลือง ไข้สูง หายใจหอบเหนื่อย เจ็บหน้าอกเวลาหายใจ", drug:"ยาฆ่าเชื้อ", sub:"ต้องให้เภสัชกร/แพทย์เป็นผู้จ่ายเท่านั้น", type:"dangerous",
    icon:"🫁", anim:"anim-pulse", particles:[{e:"🦠",cls:"p-orbit",pos:"left:50%;top:50%;",delay:"0s"}]},
 
-  {scenario:"ผิวหนังบวมแดงร้อน หมอบอกติดเชื้อ สั่งยาฆ่าเชื้อให้กินให้ครบ", drug:"ยาฆ่าเชื้อ (Cephalexin)", sub:"ต้องกินให้ครบตามหมอสั่ง", type:"dangerous",
+  {scenario:"ผิวหนังบวมแดงร้อน ลามเร็วภายใน 1-2 วัน มีไข้ เจ็บมากเวลาสัมผัส", drug:"ยาฆ่าเชื้อ", sub:"ต้องให้เภสัชกร/แพทย์เป็นผู้จ่ายเท่านั้น", type:"dangerous",
    icon:"🔴", anim:"anim-pulse", particles:[{e:"🦠",cls:"p-orbit",pos:"left:50%;top:50%;",delay:"0s"}]}
 ];
 
@@ -844,7 +844,7 @@ function squishBin(el){
 }
 
 function showExplain(item, isCorrect){
-  const label = item.type === 'dangerous' ? 'ยาฆ่าเชื้อ ต้องถามเภสัชกรก่อน' : 'ยาสามัญประจำบ้าน ใช้เองได้';
+  const label = item.type === 'dangerous' ? 'สัญญาณอันตราย ต้องถามเภสัชกร/หมอ ห้ามซื้อยาฆ่าเชื้อกินเอง' : 'อาการทั่วไป ใช้ยาสามัญประจำบ้านเองได้';
   explain.textContent = (isCorrect ? '✔ ถูกต้อง — ' : '✘ ที่ถูกคือ — ') + item.drug + ' อยู่กลุ่ม "' + label + '"';
   explain.classList.remove('show');
   void explain.offsetWidth;
