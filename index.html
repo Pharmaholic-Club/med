@@ -213,6 +213,38 @@
     color:#8aa2b0;
     margin-bottom:4px;
   }
+  .scenario-icon{
+    font-size:38px;
+    text-align:center;
+    margin-bottom:6px;
+    line-height:1;
+  }
+  .anim-pulse{animation:iconPulse 1.1s ease-in-out infinite;}
+  .anim-bounce{animation:iconBounce 1s ease-in-out infinite;}
+  .anim-wiggle{animation:iconWiggle 1.2s ease-in-out infinite;}
+  .anim-shake{animation:iconShake .5s ease-in-out infinite;}
+  .anim-float{animation:iconFloat 1.8s ease-in-out infinite;}
+  @keyframes iconPulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.18);}
+  }
+  @keyframes iconBounce{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+  }
+  @keyframes iconWiggle{
+    0%,100%{transform:rotate(-8deg);}
+    50%{transform:rotate(8deg);}
+  }
+  @keyframes iconShake{
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-4px);}
+    75%{transform:translateX(4px);}
+  }
+  @keyframes iconFloat{
+    0%,100%{transform:translateY(0) rotate(0deg);}
+    50%{transform:translateY(-6px) rotate(6deg);}
+  }
   .scenario-text{
     font-size:12.5px;
     line-height:1.55;
@@ -385,16 +417,16 @@
 
   <div class="headbar">
     <div class="avatar">🧑‍⚕️</div>
-    <h1>What Basket Does It Belong In? (สถานการณ์ยา ควรอยู่ตะกร้าไหน)</h1>
+    <h1>สถานการณ์ยา ควรอยู่ตะกร้าไหน</h1>
     <div class="icons">💊🧴</div>
   </div>
 
-  <div class="instruction">Read the situation, decide the right medicine, then drag it into the correct basket! (อ่านสถานการณ์ คิดว่าควรใช้ยาตัวไหน แล้วลากไปตะกร้าที่ถูกต้อง)</div>
+  <div class="instruction">อ่านสถานการณ์ คิดว่าควรใช้ยาตัวไหน แล้วลากไปตะกร้าที่ถูกต้อง</div>
 
   <div class="playarea" id="playarea">
 
     <div class="binwrap" id="binRed" data-type="dangerous">
-      <div class="bubble red">Dangerous Drug – Ask a Pharmacist<br>(ยาอันตราย – ต้องปรึกษาเภสัชกร)</div>
+      <div class="bubble red">ยาอันตราย<br>ต้องปรึกษาเภสัชกร</div>
       <div style="position:relative;width:100%;">
         <svg class="bin" viewBox="0 0 220 200">
           <defs>
@@ -412,13 +444,14 @@
           <ellipse cx="110" cy="72" rx="76" ry="15" fill="#e2493d" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
           <ellipse cx="110" cy="72" rx="66" ry="10" fill="#c73a2f"/>
         </svg>
-        <div class="binlabel">Dangerous Drug<br>Ask a Pharmacist<br>(ยาอันตราย)</div>
+        <div class="binlabel">ยาอันตราย<br>ต้องปรึกษาเภสัชกร</div>
       </div>
     </div>
 
     <div class="centercol">
       <div class="card" id="activeCard">
-        <div class="scenario-tag">Situation (สถานการณ์)</div>
+        <div class="scenario-tag">สถานการณ์</div>
+        <div class="scenario-icon" id="scenarioIcon">🤒</div>
         <div class="scenario-text" id="scenarioText">มีไข้สูง ปวดศีรษะ ปวดเมื่อยตัว</div>
         <div class="drug-answer">
           <div class="pillicon">💊</div>
@@ -432,12 +465,12 @@
       <div class="deck" id="deckBtn">
         <div class="layer"></div>
         <div class="layer"></div>
-        <div class="layer">Draw</div>
+        <div class="layer">สุ่มยา</div>
       </div>
     </div>
 
     <div class="binwrap" id="binGreen" data-type="household">
-      <div class="bubble green">Household Remedy – Safe to Self-Use<br>(ยาสามัญประจำบ้าน – ใช้เองได้)</div>
+      <div class="bubble green">ยาสามัญประจำบ้าน<br>ใช้เองได้</div>
       <div style="position:relative;width:100%;">
         <svg class="bin" viewBox="0 0 220 200">
           <defs>
@@ -455,7 +488,7 @@
           <ellipse cx="110" cy="72" rx="76" ry="15" fill="#69b854" stroke="rgba(0,0,0,.18)" stroke-width="2"/>
           <ellipse cx="110" cy="72" rx="66" ry="10" fill="#438033"/>
         </svg>
-        <div class="binlabel">Household Remedy<br>Safe to Self-Use<br>(ยาสามัญประจำบ้าน)</div>
+        <div class="binlabel">ยาสามัญประจำบ้าน<br>ใช้เองได้</div>
       </div>
     </div>
 
@@ -463,37 +496,37 @@
   </div>
 
   <div class="footer">
-    <button class="nextbtn" id="nextBtn">Next Item</button>
-    <div class="scoretext">Score: <span id="scoreVal">0</span></div>
+    <button class="nextbtn" id="nextBtn">ยาถัดไป</button>
+    <div class="scoretext">คะแนน: <span id="scoreVal">0</span></div>
     <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
   </div>
 
   <div class="complete" id="completeOverlay">
     <div class="complete-card">
-      <h2>All Sorted! (จัดยาครบทุกใบแล้ว!)</h2>
-      <p>Final Score: <strong id="finalScore">0</strong> / <span id="finalTotal">0</span> (คะแนนรวม) — ask each participant to explain their choice before revealing the answer</p>
-      <button id="playAgainBtn">Play Again (เล่นอีกครั้ง)</button>
+      <h2>จัดยาครบทุกใบแล้ว!</h2>
+      <p>คะแนนรวม <strong id="finalScore">0</strong> / <span id="finalTotal">0</span> ข้อ — ให้ผู้เข้าร่วมอธิบายเหตุผลของแต่ละข้อก่อนเฉลย</p>
+      <button id="playAgainBtn">เล่นอีกครั้ง</button>
     </div>
   </div>
 </div>
 
 <script>
 const items = [
-  {scenario:"มีไข้สูง ปวดศีรษะ ปวดเมื่อยตัว", drug:"Paracetamol 500mg", sub:"ลดไข้ / แก้ปวด", type:"household"},
-  {scenario:"ท้องเสียถ่ายเหลวบ่อย เสี่ยงขาดน้ำ", drug:"Oral Rehydration Salts", sub:"ผงเกลือแร่", type:"household"},
-  {scenario:"แสบท้อง จุกเสียด กรดไหลย้อนเล็กน้อย", drug:"Antacid", sub:"ยาลดกรด", type:"household"},
-  {scenario:"มีแผลถลอกเล็กน้อย ต้องทำแผลเอง", drug:"Tincture Iodine", sub:"ยาฆ่าเชื้อที่แผล", type:"household"},
-  {scenario:"ผื่นคัน ยุงกัด ต้องการทาบรรเทาอาการคัน", drug:"Calamine Lotion", sub:"ทาแก้คัน", type:"household"},
-  {scenario:"ติดเชื้อทางเดินปัสสาวะ แพทย์วินิจฉัยว่าเป็นแบคทีเรีย", drug:"Ciprofloxacin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
-  {scenario:"ไซนัสอักเสบจากเชื้อแบคทีเรีย ต้องกินยาให้ครบคอร์ส", drug:"Doxycycline 100mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
-  {scenario:"แผลติดเชื้อรุนแรง แพทย์สั่งยาฆ่าเชื้อสูตรผสม", drug:"Co-amoxiclav (Augmentin)", sub:"ยาฆ่าเชื้อสูตรผสม", type:"dangerous"},
-  {scenario:"เจ็บคอเล็กน้อย ระคายคอ ไม่มีไข้", drug:"Throat Lozenges", sub:"ยาอมบรรเทาอาการเจ็บคอ", type:"household"},
-  {scenario:"เจ็บคอมาก มีไข้สูง ต่อมทอนซิลบวมมีหนอง สงสัยติดเชื้อแบคทีเรีย", drug:"Amoxicillin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
-  {scenario:"ปอดอักเสบไม่รุนแรง แพทย์สั่งยากลุ่มมาโครไลด์", drug:"Azithromycin 250mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
-  {scenario:"ติดเชื้อที่ผิวหนัง แพทย์สั่งยากลุ่มเซฟาโลสปอริน", drug:"Cephalexin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous"},
-  {scenario:"แพ้อากาศ คัดจมูก จามบ่อย ต้องการยาแก้แพ้", drug:"Loratadine 10mg", sub:"ยาแก้แพ้", type:"dangerous"},
-  {scenario:"ปวดข้อ ปวดกล้ามเนื้อรุนแรง ต้องการยาแก้อักเสบ", drug:"Ibuprofen 400mg", sub:"ยาแก้ปวด / ลดไข้", type:"dangerous"},
-  {scenario:"ไอแห้งเรื้อรัง รบกวนการนอนหลับ", drug:"Dextromethorphan", sub:"ยาแก้ไอ", type:"dangerous"}
+  {scenario:"มีไข้สูง ปวดศีรษะ ปวดเมื่อยตัว", drug:"Paracetamol 500mg", sub:"ลดไข้ / แก้ปวด", type:"household", icon:"🤒", anim:"anim-pulse"},
+  {scenario:"ท้องเสียถ่ายเหลวบ่อย เสี่ยงขาดน้ำ", drug:"Oral Rehydration Salts", sub:"ผงเกลือแร่", type:"household", icon:"💧", anim:"anim-bounce"},
+  {scenario:"แสบท้อง จุกเสียด กรดไหลย้อนเล็กน้อย", drug:"Antacid", sub:"ยาลดกรด", type:"household", icon:"🔥", anim:"anim-shake"},
+  {scenario:"มีแผลถลอกเล็กน้อย ต้องทำแผลเอง", drug:"Tincture Iodine", sub:"ยาฆ่าเชื้อที่แผล", type:"household", icon:"🩹", anim:"anim-wiggle"},
+  {scenario:"ผื่นคัน ยุงกัด ต้องการทาบรรเทาอาการคัน", drug:"Calamine Lotion", sub:"ทาแก้คัน", type:"household", icon:"🦟", anim:"anim-float"},
+  {scenario:"ติดเชื้อทางเดินปัสสาวะ แพทย์วินิจฉัยว่าเป็นแบคทีเรีย", drug:"Ciprofloxacin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous", icon:"😖", anim:"anim-pulse"},
+  {scenario:"ไซนัสอักเสบจากเชื้อแบคทีเรีย ต้องกินยาให้ครบคอร์ส", drug:"Doxycycline 100mg", sub:"ยาฆ่าเชื้อ", type:"dangerous", icon:"👃", anim:"anim-wiggle"},
+  {scenario:"แผลติดเชื้อรุนแรง แพทย์สั่งยาฆ่าเชื้อสูตรผสม", drug:"Co-amoxiclav (Augmentin)", sub:"ยาฆ่าเชื้อสูตรผสม", type:"dangerous", icon:"🤕", anim:"anim-shake"},
+  {scenario:"เจ็บคอเล็กน้อย ระคายคอ ไม่มีไข้", drug:"Throat Lozenges", sub:"ยาอมบรรเทาอาการเจ็บคอ", type:"household", icon:"😣", anim:"anim-pulse"},
+  {scenario:"เจ็บคอมาก มีไข้สูง ต่อมทอนซิลบวมมีหนอง สงสัยติดเชื้อแบคทีเรีย", drug:"Amoxicillin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous", icon:"🌡️", anim:"anim-shake"},
+  {scenario:"ปอดอักเสบไม่รุนแรง แพทย์สั่งยากลุ่มมาโครไลด์", drug:"Azithromycin 250mg", sub:"ยาฆ่าเชื้อ", type:"dangerous", icon:"🫁", anim:"anim-pulse"},
+  {scenario:"ติดเชื้อที่ผิวหนัง แพทย์สั่งยากลุ่มเซฟาโลสปอริน", drug:"Cephalexin 500mg", sub:"ยาฆ่าเชื้อ", type:"dangerous", icon:"🔴", anim:"anim-pulse"},
+  {scenario:"แพ้อากาศ คัดจมูก จามบ่อย ต้องการยาแก้แพ้", drug:"Loratadine 10mg", sub:"ยาแก้แพ้", type:"dangerous", icon:"🤧", anim:"anim-shake"},
+  {scenario:"ปวดข้อ ปวดกล้ามเนื้อรุนแรง ต้องการยาแก้อักเสบ", drug:"Ibuprofen 400mg", sub:"ยาแก้ปวด / ลดไข้", type:"dangerous", icon:"🦵", anim:"anim-wiggle"},
+  {scenario:"ไอแห้งเรื้อรัง รบกวนการนอนหลับ", drug:"Dextromethorphan", sub:"ยาแก้ไอ", type:"dangerous", icon:"😮‍💨", anim:"anim-bounce"}
 ];
 
 let deck = [];
@@ -506,6 +539,7 @@ const activeCard = document.getElementById('activeCard');
 const cardName = document.getElementById('cardName');
 const cardSub = document.getElementById('cardSub');
 const scenarioText = document.getElementById('scenarioText');
+const scenarioIcon = document.getElementById('scenarioIcon');
 const binRed = document.getElementById('binRed');
 const binGreen = document.getElementById('binGreen');
 const scoreVal = document.getElementById('scoreVal');
@@ -549,6 +583,8 @@ function drawNext(){
   }
   current = deck.pop();
   scenarioText.textContent = current.scenario;
+  scenarioIcon.textContent = current.icon;
+  scenarioIcon.className = 'scenario-icon ' + current.anim;
   cardName.textContent = current.drug;
   cardSub.textContent = '(' + current.sub + ')';
   activeCard.style.visibility = 'visible';
