@@ -49,7 +49,7 @@ button:focus-visible{outline:4px solid #1f6fd1;outline-offset:2px}
 .chip.low span{color:#ffb4a8;display:inline-block;animation:pl .6s infinite alternate}
 @keyframes pl{to{transform:scale(1.1)}}
 .say{background:transparent;border-radius:1.2cqw;overflow:hidden;color:#5a3a22;font:600 max(11px,2.3cqw)/1.5 'Mali','Sarabun',sans-serif;padding:0 1cqw}
-.sw{position:absolute;left:1cqw;right:1cqw;top:0;bottom:0;display:flex;align-items:center;justify-content:flex-start;gap:2cqw}.sw img{flex:none;height:100%;width:auto;max-width:34%;object-fit:contain;border-radius:1cqw;pointer-events:none}.sw span{flex:1 1 auto;min-width:0;text-align:center}
+.sw{position:absolute;left:1cqw;right:1cqw;top:0;bottom:0;display:flex;align-items:center;justify-content:flex-start;gap:2cqw}.sw img{flex:none;height:100%;width:auto;max-width:36%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 .3cqw .4cqw rgba(60,35,18,.25))}.sw .tx{flex:1 1 auto;min-width:0;text-align:center;line-height:1.25}.sw .qq{font-size:.75em}.sw .nm{font-family:'Mitr','Mali',sans-serif;font-weight:600;font-size:1.5em;line-height:1.1;color:#c4570f;margin-top:.1em}.sw .th{font-size:.95em;margin-top:.1em}
 .say.sm{font-size:max(10px,1.65cqw)}.say.xs{font-size:max(9px,1.35cqw)}
 .ic{overflow:hidden}.ic img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;mix-blend-mode:multiply}
 .ic{background:linear-gradient(#feeed5,#fbecce);font-size:max(28px,6.2cqw);border-radius:1.2cqw}
@@ -110,7 +110,7 @@ button:focus-visible{outline:4px solid #1f6fd1;outline-offset:2px}
 <div id="app">
 <div id="fill"></div>
 <div id="stage" role="application" aria-label="เกมตะกร้าแยกยา/อาการ">
- <div class="p" id="stg"></div>
+ 
 
  <section id="load" class="scr on">
   <div class="logos"><div class="lg a" role="img" aria-label="Faculty of Pharmacy Mahasarakham University"></div><div class="lg b" role="img" aria-label="MSU Pharmacy community minded"></div></div>
@@ -128,7 +128,7 @@ button:focus-visible{outline:4px solid #1f6fd1;outline-offset:2px}
   <div class="p chip" id="scP" style="left:13.9%;top:12.0%;width:3.3%;height:3.9%;background:#8d5732"><span id="score">0</span></div>
   <div class="p chip" id="tmP" style="left:93.1%;top:12.0%;width:3.1%;height:3.9%;background:#8b5430;place-items:center;padding-left:0"><span id="tm">30</span></div>
   <button class="hit" id="pause" style="left:4.1%;top:18.0%;width:2.9%;height:5.3%;border-radius:50%" aria-label="หยุดเกม"></button>
-  <div class="p say" id="say" style="left:20.5%;top:19.5%;width:61.5%;height:23%"></div>
+  <div class="p say" id="say" style="left:20.5%;top:19.5%;width:61.5%;height:22.5%"></div>
 
   <button class="hit bk" id="bkA" aria-pressed="false" style="left:10.9%;top:51.6%;width:26.5%;height:38.4%"></button>
   <button class="hit bk" id="bkB" aria-pressed="false" style="left:63.7%;top:51.6%;width:26.5%;height:38.4%"></button>
@@ -159,9 +159,10 @@ if(typeof QUESTIONS==="undefined"){document.addEventListener("DOMContentLoaded",
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function syncFill(id){const el=document.getElementById(id==='end'?'game':id);if(el)$('#fill').style.backgroundImage=getComputedStyle(el).backgroundImage}
 function show(id){$$('.scr').forEach(s=>s.classList.toggle('on',s.id===id||(id==='end'&&s.id==='game')));
- if(id!=='game')$('#stg').textContent='';syncFill(id)}
+ syncFill(id)}
 function fitSay(){const s=$('#say');if(!s)return;let f=Math.max(11,$('#stage').clientWidth*.023);s.style.fontSize=f+'px';
- for(let n=0;n<40&&s.scrollHeight>s.clientHeight+1&&f>7;n++){f*=.95;s.style.fontSize=f+'px'}}
+ const sw=s.querySelector('.sw'),tx=s.querySelector('.tx');const ov=()=>tx?(tx.offsetHeight>sw.clientHeight+1||tx.scrollWidth>tx.clientWidth+1):s.scrollHeight>s.clientHeight+1;
+ for(let n=0;n<60&&ov()&&f>7;n++){f*=.95;s.style.fontSize=f+'px'}}
 function fitLb(){const w=$('#stage').clientWidth,els=['lbA','lbB'].map(i=>$('#'+i)).filter(Boolean);let f=Math.max(10,w*.021);
  const ov=s=>s.scrollHeight>s.clientHeight+1||s.scrollWidth>s.clientWidth+1;
  els.forEach(s=>s.style.fontSize=f+'px');
@@ -201,8 +202,8 @@ function fxNo(){
  const g=$('#game');g.classList.remove('shk');void g.offsetWidth;g.classList.add('shk');snd('no')}
 function run(){clearInterval(tick);tick=setInterval(()=>{left--;drawT();if(left<=0){clearInterval(tick);settle(-1)}},1000)}
 function loadQ(){
- const q=qs[qi];sel=-1;locked=false;fxClear();syncFill('game');$('#stg').textContent=q.stage||'';
- const s=$('#say');s.innerHTML=q.img?'<div class="sw"><img src="'+q.img+'" alt=""><span>'+q.text+'</span></div>':q.text;fitSay();
+ const q=qs[qi];sel=-1;locked=false;fxClear();syncFill('game');
+ const s=$('#say');s.innerHTML=q.img?'<div class="sw"><img src="'+q.img+'" alt=""><div class="tx"><div class="qq">'+q.text+'</div>'+(q.name?'<div class="nm">'+q.name+'</div>':'')+(q.thai?'<div class="th">('+q.thai+')</div>':'')+'</div></div>':q.text;fitSay();
  ['A','B'].forEach((k,i)=>{const b=$('#bk'+k);b.className='hit bk';b.setAttribute('aria-pressed','false');
   $('#ic'+k).innerHTML=q.choices[i].icon;$('#lb'+k).innerHTML='ตะกร้า:<br>'+q.choices[i].label});
  fitLb();
