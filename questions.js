@@ -6,6 +6,7 @@
    stage   = ชื่อด่าน (แสดงเหนือกรอบเกม)
    text    = บทพูดของเภสัชกร (คำอธิบายอาการ)
    img     = (ไม่ใส่ก็ได้) รูปที่แสดงข้างบทพูด เช่น img:"images/ibuprofen.png"
+   name/thai = (ไม่ใส่ก็ได้) ชื่อยาตัวใหญ่ และคำอ่านภาษาไทย แสดงข้างรูป
    choices = ตะกร้า 2 ใบ  { label: ชื่อบนตะกร้า, icon: อีโมจิ หรือ <img src="..."> }
    answer  = ตะกร้าที่ถูก  0 = ซ้าย, 1 = ขวา
    explain = คำอธิบายหลังตอบ (ไม่ใส่ก็ได้)
@@ -39,17 +40,17 @@ const QUESTIONS = [
 
  {stage:"ด่าน: อาการนี้ใช้ยากลุ่มไหน?",text:"นางสาวไทยมีไข้ต่ำๆ (หรือไม่มีไข้) ไอ จาม และมีน้ำมูก... ควรเลือกยากลุ่มไหน?",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:1,explain:"ไข้ต่ำหรือไม่มีไข้ ร่วมกับไอ จาม น้ำมูก เป็นอาการหวัดทั่วไป จึงใช้ยาบรรเทาอาการ"},
 
- {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/ibuprofen.png",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:1,explain:"Ibuprofen เป็นยาแก้อักเสบ/บรรเทาอาการปวด (กลุ่ม NSAIDs) ไม่ใช่ยาปฏิชีวนะ"},
+ {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/ibuprofen.png",name:"Ibuprofen",thai:"ไอ-บู-โปร-เฟน",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:1,explain:"Ibuprofen เป็นยาแก้อักเสบ/บรรเทาอาการปวด (กลุ่ม NSAIDs) ไม่ใช่ยาปฏิชีวนะ"},
 
- {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/amoxicillin.png",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:0,explain:"Amoxicillin เป็นยาปฏิชีวนะ ใช้รักษาการติดเชื้อแบคทีเรีย"},
+ {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/amoxicillin.png",name:"Amoxicillin",thai:"อะ-ม็อก-ซี-ซิล-ลิน",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:0,explain:"Amoxicillin เป็นยาปฏิชีวนะ ใช้รักษาการติดเชื้อแบคทีเรีย"},
 
- {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/diclofenac.png",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:1,explain:"Diclofenac เป็นยาแก้อักเสบ/บรรเทาอาการปวด ส่วน Dicloxacillin เป็นยาปฏิชีวนะ (ชื่อคล้ายกัน ระวังสับสน)"},
+ {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/diclofenac.png",name:"Diclofenac",thai:"ได-โคล-เฟ-แนค",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:1,explain:"Diclofenac เป็นยาแก้อักเสบ/บรรเทาอาการปวด ส่วน Dicloxacillin เป็นยาปฏิชีวนะ (ชื่อคล้ายกัน ระวังสับสน)"},
 
- {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/amox_clav.png",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:0,explain:"Amoxicillin/clavulanic acid เป็นยาปฏิชีวนะ"},
+ {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/amox_clav.png",name:"Amoxicillin/<wbr>clavulanic acid",thai:"อะ-ม็อก-ซี-ซิล-ลิน / คลา-วู-ลา-นิก แอซิด",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:0,explain:"Amoxicillin/clavulanic acid เป็นยาปฏิชีวนะ"},
 
- {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/dicloxacillin.png",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:0,explain:"Dicloxacillin เป็นยาปฏิชีวนะ (ชื่อคล้าย Diclofenac ซึ่งเป็นยาแก้อักเสบ ระวังสับสน)"},
+ {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/dicloxacillin.png",name:"Dicloxacillin",thai:"ได-โคล-ซ็อก-ซา-ซิล-ลิน",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:0,explain:"Dicloxacillin เป็นยาปฏิชีวนะ (ชื่อคล้าย Diclofenac ซึ่งเป็นยาแก้อักเสบ ระวังสับสน)"},
 
- {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/mefenamic.png",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:1,explain:"Mefenamic acid เป็นยาแก้ปวด/ลดอักเสบ (กลุ่ม NSAIDs) ไม่ใช่ยาปฏิชีวนะ"},
+ {stage:"ด่าน: ดูรูปยา เลือกกลุ่มให้ถูก",text:"ยานี้คือยาอะไร?",img:"images/mefenamic.png",name:"Mefenamic acid",thai:"เม-เฟ-นา-มิก แอซิด",choices:[{label:"ยาปฏิชีวนะ",icon:"🦠"},{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"}],answer:1,explain:"Mefenamic acid เป็นยาแก้ปวด/ลดอักเสบ (กลุ่ม NSAIDs) ไม่ใช่ยาปฏิชีวนะ"},
 
  {stage:"ด่าน: สถานการณ์จริง",text:"มีอาการน้ำมูกไหล ไอ เจ็บคอเล็กน้อย ไม่มีไข้สูง และไม่มีหนองที่คอ เพื่อนบอกว่า “กินยาฆ่าเชื้อสิ จะได้หายเร็ว ๆ” ควรเลือกตะกร้าไหน?",choices:[{label:"ยาแก้อักเสบ/<wbr>บรรเทาอาการ",icon:"💊"},{label:"ยาฆ่าเชื้อ",icon:"🦠"}],answer:0,explain:"ไข้ไม่สูงและไม่มีหนอง มักเป็นหวัดซึ่งส่วนใหญ่เกิดจากไวรัส ยาฆ่าเชื้อไม่ช่วยให้หายเร็วขึ้น ใช้ยาบรรเทาอาการแทน"},
 
