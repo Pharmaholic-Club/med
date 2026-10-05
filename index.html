@@ -70,7 +70,8 @@ button:focus-visible{outline:4px solid #1f6fd1;outline-offset:2px}
 .btn{font:600 clamp(16px,2.6cqw,64px) 'Mitr',sans-serif;padding:.4em 1.2em;border-radius:40px;color:#fff;border:4px solid #fff6e2;box-shadow:0 4px 0 rgba(90,50,10,.4);text-shadow:0 2px 0 rgba(0,0,0,.25);min-width:8em}
 .btn.o{background:linear-gradient(#ffb94a,#f08a12)}.btn.b{background:linear-gradient(#5ec6e6,#2c8fb8)}
 .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-#end{background:transparent}
+#end{background:transparent;z-index:7}
+#game.fin .bk::before,#game.fin .bk::after,#game.fin #fx,#game.fin .go{display:none}
 #end.on,#modal.on{display:grid;place-items:center}
 #end::before{content:"";position:absolute;inset:0;background:rgba(50,25,10,.45)}
 #end .card{position:relative}
@@ -188,7 +189,7 @@ function snd(t){if(muted)return;try{AC=AC||new(window.AudioContext||window.webki
  else if(t==='sel')tone(740,0,.07,'sine',.07)}catch(e){}}
 $('#snb').onclick=()=>{muted=!muted;try{localStorage.setItem('muted',muted?'1':'0')}catch(e){}drawSn();snd('sel')};
 const rnd=(a,b)=>a+Math.random()*(b-a);
-function fxClear(){$('#fx').innerHTML='';const g=$('#game');g.classList.remove('ok','no','shk');$('#scP').classList.remove('bump')}
+function fxClear(){$('#fx').innerHTML='';const g=$('#game');g.classList.remove('ok','no','shk','fin');$('#scP').classList.remove('bump')}
 function fxAdd(h){const d=document.createElement('div');d.innerHTML=h;const e=d.firstChild;$('#fx').appendChild(e);return e}
 function fxOk(){
  const cols=['#ffd45e','#ff7a6b','#5ec6e6','#7ddc8a','#ffb94a','#c79bff','#fff'];
@@ -221,7 +222,7 @@ function settle(c){
  const g=$('#go');g.disabled=false;g.textContent=qi+1<qs.length?'ข้อต่อไป':'ดูผลคะแนน';
 }
 $('#bkA').onclick=()=>pick(0);$('#bkB').onclick=()=>pick(1);
-$('#go').onclick=()=>{if(!locked){settle(sel);return}if(qi+1<qs.length){qi++;loadQ()}else{clearInterval(tick);$('#fs').textContent=Math.round(right/qs.length*100)+'%';$('#fr').textContent='ตอบถูก '+right+' จาก '+qs.length+' ข้อ (ได้ '+score+' คะแนน)';show('end')}};
+$('#go').onclick=()=>{if(!locked){settle(sel);return}if(qi+1<qs.length){qi++;loadQ()}else{clearInterval(tick);$('#fs').textContent=Math.round(right/qs.length*100)+'%';$('#fr').textContent='ตอบถูก '+right+' จาก '+qs.length+' ข้อ (ได้ '+score+' คะแนน)';$('#game').classList.add('fin');show('end')}};
 $('#start').onclick=startGame;$('#again').onclick=startGame;$('#home').onclick=()=>show('menu');
 const how=()=>modal('<h2>วิธีการเล่น</h2><ol><li>ฟังเภสัชกรเล่าอาการของลูกค้า</li><li>แตะตะกร้าที่ตรงกับโรคหรือยา</li><li>กด “ตอบ!” ก่อนหมดเวลา</li><li>ตอบถูกข้อละ 1 คะแนน และสรุปผลเป็นเปอร์เซ็นต์ตอนจบเกม</li></ol><button class="btn o" data-a="cl">เข้าใจแล้ว</button>');
 $('#how').onclick=how;$('#how2').onclick=how;
