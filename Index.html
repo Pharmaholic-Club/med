@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1d130b">
+<meta name="format-detection" content="telephone=no">
+<title>ตะกร้าแยกยา/อาการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@500;600&family=Mali:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ar:1.8338}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none;background:#1d130b}
+body{position:fixed;inset:0;color:#5a3a22;font-family:'Mali','Sarabun',sans-serif;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation}
+button:focus-visible{outline:4px solid #1f6fd1;outline-offset:2px}
+/* เต็มจอ: #app กินทั้งหน้าจอ, #stage ขยายสูงสุดโดยคงอัตราส่วนภาพ, ส่วนที่เหลือเติมด้วยภาพเบลอ */
+#app{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden;container-type:size;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+#fill{position:absolute;inset:-3%;background-size:cover;background-position:center;filter:blur(18px) brightness(.7) saturate(1.1)}
+#stage{position:relative;z-index:1;container-type:inline-size;aspect-ratio:var(--ar);width:min(100cqw,calc(100cqh * var(--ar)));overflow:hidden;background:#d9b983}
+/* มือถือ/แท็บเล็ตแนวตั้ง: หมุนเกม 90° ให้เต็มจอโดยไม่ต้องพลิกเครื่อง */
+@media (orientation:portrait) and (pointer:coarse){
+ #app{inset:auto;top:0;left:0;width:100vh;width:100dvh;height:100vw;height:100dvw;transform-origin:0 0;transform:translateX(100vw) rotate(90deg);transform:translateX(100dvw) rotate(90deg);padding:env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px) env(safe-area-inset-top,0px)}
+}
+.scr{position:absolute;inset:0;display:none;background-size:100% 100%;background-repeat:no-repeat}
+.scr.on{display:block}
+#stg{left:50%;top:1.3%;transform:translateX(-50%);z-index:3;display:block;font:600 max(10px,1.7cqw)/1 'Mitr',sans-serif;color:#fff6e2;background:rgba(90,58,34,.82);border:.25cqw solid #f0c98a;border-radius:2cqw;padding:.6cqw 1.6cqw;white-space:nowrap}
+#stg:empty{display:none}
+#fsb{position:absolute;right:.9cqw;bottom:.9cqw;z-index:8;width:max(34px,3.6cqw);height:max(34px,3.6cqw);display:grid;place-items:center;border-radius:50%;background:rgba(60,35,18,.6);border:.2cqw solid rgba(255,246,226,.85);color:#fff6e2}
+#fsb svg{width:58%;height:58%;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+#fsb .x{display:none}#fsb.on .e{display:none}#fsb.on .x{display:block}
+#fsb:hover{background:rgba(60,35,18,.85)}
+#fsb[hidden]{display:none}
+#load{background-image:url(images/loading.jpeg)}#menu{background-image:url(images/menu.jpeg)}#game{background-image:url(images/game.jpeg)}#game.ok{background-image:url(images/game-correct.jpeg)}#game.no{background-image:url(images/game-wrong.jpeg)}
+.p{position:absolute;display:grid;place-items:center;pointer-events:none;text-align:center}
+.hit{position:absolute;border-radius:18px;transition:background .15s,box-shadow .15s}
+.hit:hover{background:rgba(255,255,255,.2)}
+.hit:active{background:rgba(255,255,255,.35)}
+/* loading */
+.bar{display:block;place-items:normal;text-align:left;background:#5b3820;border:.3cqw solid #f0c98a;border-radius:3cqw;overflow:hidden;position:absolute}
+.bar i{display:block;justify-self:start;margin:0;height:100%;width:0;background:linear-gradient(#ffc460,#f08a12);transition:width .2s}
+.bar b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:600 max(10px,1.6cqw)/1 'Mitr',sans-serif;color:#fff6e2;padding-bottom:.18em;text-shadow:0 0 .15em #5a3820,0 0 .25em #5a3820,0 .05em 0 #5a3820}
+/* game */
+.chip{font:600 max(12px,2.05cqw)/1 'Mitr',sans-serif;color:#fff6e2;place-items:center start;padding-left:.3cqw;white-space:nowrap;text-shadow:0 0 .2cqw #5a3820,0 .1cqw 0 #5a3820}
+.chip.low span{color:#ffb4a8;display:inline-block;animation:pl .6s infinite alternate}
+@keyframes pl{to{transform:scale(1.1)}}
+.say{background:transparent;border-radius:1.2cqw;overflow:hidden;color:#5a3a22;font:600 max(11px,2.3cqw)/1.5 'Mali','Sarabun',sans-serif;padding:0 1cqw}
+.sw{position:absolute;left:1cqw;right:1cqw;top:0;bottom:0;display:flex;align-items:center;justify-content:flex-start;gap:2cqw}.sw img{flex:none;height:100%;width:auto;max-width:34%;object-fit:contain;border-radius:1cqw;pointer-events:none}.sw span{flex:1 1 auto;min-width:0;text-align:center}
+.say.sm{font-size:max(10px,1.65cqw)}.say.xs{font-size:max(9px,1.35cqw)}
+.ic{overflow:hidden}.ic img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;mix-blend-mode:multiply}
+.ic{background:linear-gradient(#feeed5,#fbecce);font-size:max(28px,6.2cqw);border-radius:1.2cqw}
+.lb{background:#f6e5c7;color:#5a3a22;font:600 max(10px,2.1cqw)/1.2 'Mitr','Mali',sans-serif;border-radius:.8cqw;padding:.2cqw .4cqw;overflow:hidden;word-break:keep-all;overflow-wrap:normal}
+.bk{border-radius:0}.bk:hover,.bk:active{background:none}.bk::after{content:"";position:absolute;left:0;right:0;top:32.5%;bottom:0;border-radius:10% 10% 45% 45%/16% 16% 55% 55%;pointer-events:none;transition:box-shadow .15s}
+.bk.sel::after{box-shadow:0 0 0 .45cqw #ffd45e,0 0 2.2cqw .5cqw rgba(255,212,94,.85)}
+.bk.ok::after{box-shadow:0 0 0 .45cqw #3f9b4f,0 0 2.2cqw .5cqw rgba(111,211,127,.85)}
+.bk.no::after{box-shadow:0 0 0 .45cqw #d2503f,0 0 2.2cqw .5cqw rgba(240,128,112,.85);animation:sh .4s}
+@keyframes sh{25%{transform:translateX(-1cqw)}75%{transform:translateX(1cqw)}}
+.go{position:absolute;left:41.9%;top:83.5%;width:17.1%;height:10.4%;border-radius:8cqw;border:.55cqw solid #fff6e2;background:linear-gradient(#ffb94a,#f08a12);color:#fff;font:600 max(15px,3.1cqw) 'Mitr',sans-serif;text-shadow:0 .2cqw 0 rgba(0,0,0,.25);box-shadow:0 .6cqw 0 rgba(90,50,10,.4)}
+.go:active{transform:translateY(.5cqw)}
+.go:disabled{filter:grayscale(.6) brightness(1.05);opacity:1;cursor:default}
+/* end + modal */
+.card{background:#fff6e2;color:#5a3a22;border:4px solid #c9a46c;border-radius:26px;padding:2.2cqw 3cqw;text-align:center;max-width:min(60cqw,92%);box-shadow:0 6px 0 rgba(90,50,10,.3);font-size:clamp(14px,2.3cqw,60px);line-height:1.7}
+.card h2{font:600 clamp(22px,4.2cqw,100px) 'Mitr',sans-serif;margin:0 0 6px}
+.card ol{text-align:left;margin:8px 0 14px;padding-left:22px}
+.big{font:600 clamp(42px,8.5cqw,200px) 'Mitr',sans-serif;color:#f08a12;line-height:1.1}
+.btn{font:600 clamp(16px,2.6cqw,64px) 'Mitr',sans-serif;padding:.4em 1.2em;border-radius:40px;color:#fff;border:4px solid #fff6e2;box-shadow:0 4px 0 rgba(90,50,10,.4);text-shadow:0 2px 0 rgba(0,0,0,.25);min-width:8em}
+.btn.o{background:linear-gradient(#ffb94a,#f08a12)}.btn.b{background:linear-gradient(#5ec6e6,#2c8fb8)}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#end{background:transparent}
+#end.on,#modal.on{display:grid;place-items:center}
+#end::before{content:"";position:absolute;inset:0;background:rgba(50,25,10,.45)}
+#end .card{position:relative}
+#modal{position:absolute;inset:0;background:rgba(50,25,10,.55);display:none;padding:14px;z-index:9}
+/* ===== เอฟเฟกต์ตอบถูก/ผิด ===== */
+#fx{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:hidden}
+.pt{position:absolute;left:51%;top:50%;width:1.1cqw;height:1.5cqw;margin:-.7cqw 0 0 -.55cqw;border-radius:25%;background:var(--c);opacity:0;animation:burst var(--t,1.6s) cubic-bezier(.2,.7,.4,1) var(--d,0s) forwards}
+.pt.em{width:auto;height:auto;background:none;font-size:2.8cqw;line-height:1;margin:-1.4cqw 0 0 -1.4cqw}
+@keyframes burst{0%{opacity:1;transform:translate(0,0) rotate(0) scale(.3)}
+ 35%{opacity:1;transform:translate(calc(var(--dx)*.8cqw),calc(var(--up)*1cqw)) rotate(calc(var(--r)*.5)) scale(1)}
+ 100%{opacity:0;transform:translate(calc(var(--dx)*1cqw),calc(var(--fall)*1cqw)) rotate(var(--r)) scale(.9)}}
+.dr{position:absolute;top:34%;font-size:2.2cqw;line-height:1;opacity:0;animation:drop var(--t,1.5s) ease-in var(--d,0s) forwards}
+@keyframes drop{0%{opacity:0;transform:translateY(0)}15%{opacity:.95}100%{opacity:0;transform:translateY(22cqw)}}
+.flash{position:absolute;inset:0;opacity:0}
+.flash.g{background:radial-gradient(ellipse at center,rgba(255,236,150,0) 45%,rgba(255,214,80,.45) 100%);animation:fl .9s ease-out}
+.flash.r{background:radial-gradient(ellipse at center,rgba(255,60,40,0) 40%,rgba(210,40,30,.55) 100%);animation:fl 1s ease-out}
+@keyframes fl{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
+.plus{position:absolute;left:17.4%;top:11.2%;font:600 4.2cqw/1 'Mitr',sans-serif;color:#ffe27a;text-shadow:0 0 .3cqw #7a4a12,0 .25cqw 0 #7a4a12,0 0 1.4cqw rgba(255,210,80,.9);opacity:0;animation:plus 1.3s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes plus{0%{opacity:0;transform:translateY(1cqw) scale(.4)}20%{opacity:1;transform:translateY(-.5cqw) scale(1.25)}100%{opacity:0;transform:translateY(-6cqw) scale(1)}}
+.bump{animation:bump .6s ease-out}
+@keyframes bump{30%{transform:scale(1.5)}60%{transform:scale(.92)}}
+#game.shk{animation:gshake .55s cubic-bezier(.36,.07,.19,.97)}
+@keyframes gshake{10%,90%{transform:translateX(-.4cqw)}20%,80%{transform:translateX(.8cqw)}30%,50%,70%{transform:translateX(-1.4cqw)}40%,60%{transform:translateX(1.4cqw)}}
+.bk.ok::before,.bk.no::before{position:absolute;right:-2.2%;top:3%;width:4.6cqw;height:4.6cqw;border-radius:50%;display:grid;place-items:center;color:#fff;font:600 3.2cqw/1 'Mitr',sans-serif;border:.3cqw solid #fff6e2;box-shadow:0 .4cqw 0 rgba(60,30,10,.35);pointer-events:none;z-index:2;animation:badge .5s cubic-bezier(.3,1.6,.5,1) both}
+.bk.ok::before{content:"✓";background:linear-gradient(#69d27a,#2f9a45)}
+.bk.no::before{content:"✕";background:linear-gradient(#ff8a78,#d2412f)}
+.bk.ok{animation:hop .6s ease-out}
+@keyframes badge{0%{transform:scale(0) rotate(-40deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes hop{30%{transform:translateY(-1.6cqw) scale(1.04)}60%{transform:translateY(0) scale(.99)}}
+#snb{position:absolute;right:calc(1.5cqw + max(34px,3.6cqw));bottom:.9cqw;z-index:8;width:max(34px,3.6cqw);height:max(34px,3.6cqw);display:grid;place-items:center;border-radius:50%;background:rgba(60,35,18,.6);border:.2cqw solid rgba(255,246,226,.85);color:#fff6e2;font-size:max(15px,1.8cqw);line-height:1}
+#snb:hover{background:rgba(60,35,18,.85)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>.logos{position:absolute;top:2.4%;right:2%;display:flex;align-items:center;gap:1.2cqw;z-index:2;pointer-events:none}.lg{height:6cqw;background-position:center;background-size:contain;background-repeat:no-repeat;filter:drop-shadow(0 .25cqw .4cqw rgba(40,20,5,.4))}.lg.a{width:6cqw;background-image:url(images/logo-faculty.png)}.lg.b{width:4.65cqw;background-image:url(images/logo-msu.png)}</style>
+</head>
+<body>
+<div id="app">
+<div id="fill"></div>
+<div id="stage" role="application" aria-label="เกมตะกร้าแยกยา/อาการ">
+ <div class="p" id="stg"></div>
+
+ <section id="load" class="scr on">
+  <div class="logos"><div class="lg a" role="img" aria-label="Faculty of Pharmacy Mahasarakham University"></div><div class="lg b" role="img" aria-label="MSU Pharmacy community minded"></div></div>
+  <div class="p bar" style="left:33.2%;top:92.7%;width:33.9%;height:5.3%;pointer-events:auto"><i id="barI"></i><b id="barT">0%</b></div>
+ </section>
+
+ <section id="menu" class="scr">
+  <div class="logos"><div class="lg a" role="img" aria-label="Faculty of Pharmacy Mahasarakham University"></div><div class="lg b" role="img" aria-label="MSU Pharmacy community minded"></div></div>
+  <button class="hit" id="start" style="left:39.2%;top:43.9%;width:22.7%;height:12.0%;border-radius:4cqw" aria-label="เริ่มเกมใหม่"></button>
+  <button class="hit" id="how" style="left:39.2%;top:58.5%;width:22.7%;height:11.7%;border-radius:4cqw" aria-label="วิธีการเล่น"></button>
+  <button class="hit" id="how2" style="left:1.6%;top:2.1%;width:5.2%;height:9.6%;border-radius:50%" aria-label="เมนู"></button>
+ </section>
+
+ <section id="game" class="scr">
+  <div class="p chip" id="scP" style="left:13.9%;top:12.0%;width:3.3%;height:3.9%;background:#8d5732"><span id="score">0</span></div>
+  <div class="p chip" id="tmP" style="left:93.1%;top:12.0%;width:3.1%;height:3.9%;background:#8b5430;place-items:center;padding-left:0"><span id="tm">30</span></div>
+  <button class="hit" id="pause" style="left:4.1%;top:18.0%;width:2.9%;height:5.3%;border-radius:50%" aria-label="หยุดเกม"></button>
+  <div class="p say" id="say" style="left:20.5%;top:19.5%;width:61.5%;height:23%"></div>
+
+  <button class="hit bk" id="bkA" aria-pressed="false" style="left:10.9%;top:51.6%;width:26.5%;height:38.4%"></button>
+  <button class="hit bk" id="bkB" aria-pressed="false" style="left:63.7%;top:51.6%;width:26.5%;height:38.4%"></button>
+  <div class="p ic" id="icA" style="left:20.1%;top:53.5%;width:8.8%;height:13.9%"></div>
+  <div class="p ic" id="icB" style="left:72.2%;top:53.5%;width:8.8%;height:13.9%"></div>
+  <div class="p lb" id="lbA" style="left:18.5%;top:75.2%;width:11.6%;height:10.5%"></div>
+  <div class="p lb" id="lbB" style="left:71.1%;top:75.2%;width:11.6%;height:10.5%"></div>
+  <button class="go" id="go" disabled>ตอบ!</button>
+  <div id="fx" aria-hidden="true"></div>
+ </section>
+
+ <section id="end" class="scr">
+  <div class="card"><h2>จบเกมแล้ว!</h2><div>สรุปผลคะแนน</div><div class="big" id="fs">0</div>
+   <p id="fr" style="margin:4px 0 12px"></p>
+   <div class="row"><button class="btn o" id="again">เล่นอีกครั้ง</button><button class="btn b" id="home">กลับเมนู</button></div></div>
+ </section>
+
+ <div id="modal"><div class="card" id="mc"></div></div>
+ <button id="snb" aria-label="เปิด/ปิดเสียง" title="เปิด/ปิดเสียง (M)">🔊</button>
+ <button id="fsb" aria-label="เต็มจอ" title="เต็มจอ (F)"><svg class="e" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><svg class="x" viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg></button>
+</div>
+</div>
+
+<script src="questions.js"></script>
+<script>
+/* โจทย์ทั้งหมดอยู่ในไฟล์ questions.js */
+if(typeof QUESTIONS==="undefined"){document.addEventListener("DOMContentLoaded",()=>alert("ไม่พบไฟล์ questions.js — ให้วางไว้โฟลเดอร์เดียวกับ index.html"));window.QUESTIONS=[];window.TIME_PER_QUESTION=120}
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function syncFill(id){const el=document.getElementById(id==='end'?'game':id);if(el)$('#fill').style.backgroundImage=getComputedStyle(el).backgroundImage}
+function show(id){$$('.scr').forEach(s=>s.classList.toggle('on',s.id===id||(id==='end'&&s.id==='game')));
+ if(id!=='game')$('#stg').textContent='';syncFill(id)}
+function fitSay(){const s=$('#say');if(!s)return;let f=Math.max(11,$('#stage').clientWidth*.023);s.style.fontSize=f+'px';
+ for(let n=0;n<40&&s.scrollHeight>s.clientHeight+1&&f>7;n++){f*=.95;s.style.fontSize=f+'px'}}
+function fitLb(){const w=$('#stage').clientWidth,els=['lbA','lbB'].map(i=>$('#'+i)).filter(Boolean);let f=Math.max(10,w*.021);
+ const ov=s=>s.scrollHeight>s.clientHeight+1||s.scrollWidth>s.clientWidth+1;
+ els.forEach(s=>s.style.fontSize=f+'px');
+ for(let n=0;n<60&&els.some(ov)&&f>6;n++){f*=.95;els.forEach(s=>s.style.fontSize=f+'px')}}
+function modal(h){$('#mc').innerHTML=h;$('#modal').classList.add('on')}
+function closeModal(){$('#modal').classList.remove('on')}
+
+let imgsReady=false;
+Promise.all(['loading.jpeg','menu.jpeg','game.jpeg','game-correct.jpeg','game-wrong.jpeg','logo-faculty.png','logo-msu.png'].map(f=>new Promise(r=>{const i=new Image();i.onload=i.onerror=r;i.src='images/'+f}))).then(()=>imgsReady=true);
+let p=0;const lt=setInterval(()=>{p=Math.min(imgsReady?100:92,p+Math.random()*9+3);$('#barI').style.width=p+'%';$('#barT').textContent=Math.floor(p)+'%';
+ if(p>=100){clearInterval(lt);setTimeout(()=>show('menu'),400)}},140);
+
+let qs=[],qi=0,score=0,right=0,sel=-1,locked=false,left=TIME_PER_QUESTION,tick=null;
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+function startGame(){qs=shuffle(QUESTIONS);qi=0;score=0;right=0;fit();show('game');loadQ()}
+/* ===== เสียง + เอฟเฟกต์ ===== */
+let AC=null,muted=false;try{muted=localStorage.getItem('muted')==='1'}catch(e){}
+function drawSn(){$('#snb').textContent=muted?'🔇':'🔊'}drawSn();
+function snd(t){if(muted)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const n=AC.currentTime;
+ const tone=(f,s,d,ty,v)=>{const o=AC.createOscillator(),g=AC.createGain();o.type=ty;o.frequency.setValueAtTime(f,n+s);g.gain.setValueAtTime(.0001,n+s);g.gain.linearRampToValueAtTime(v,n+s+.02);g.gain.exponentialRampToValueAtTime(.0001,n+s+d);o.connect(g);g.connect(AC.destination);o.start(n+s);o.stop(n+s+d+.05)};
+ if(t==='ok')[523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,i*.09,.4,'triangle',.2));
+ else if(t==='no'){tone(220,0,.3,'sawtooth',.12);tone(155.6,.2,.5,'sawtooth',.12)}
+ else if(t==='sel')tone(740,0,.07,'sine',.07)}catch(e){}}
+$('#snb').onclick=()=>{muted=!muted;try{localStorage.setItem('muted',muted?'1':'0')}catch(e){}drawSn();snd('sel')};
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function fxClear(){$('#fx').innerHTML='';const g=$('#game');g.classList.remove('ok','no','shk');$('#scP').classList.remove('bump')}
+function fxAdd(h){const d=document.createElement('div');d.innerHTML=h;const e=d.firstChild;$('#fx').appendChild(e);return e}
+function fxOk(){
+ const cols=['#ffd45e','#ff7a6b','#5ec6e6','#7ddc8a','#ffb94a','#c79bff','#fff'];
+ for(let i=0;i<46;i++){const e=fxAdd('<i class="pt"></i>');e.style.cssText+=`--c:${cols[i%cols.length]};--dx:${rnd(-34,34)};--up:${rnd(-30,-8)};--fall:${rnd(8,26)};--r:${rnd(-540,540)}deg;--t:${rnd(1.3,2)}s;--d:${rnd(0,.15)}s`}
+ ['⭐','✨','💊','🌿','⭐','✨'].forEach((m,i)=>{const e=fxAdd('<i class="pt em"></i>');e.textContent=m;e.style.cssText+=`--dx:${rnd(-30,30)};--up:${rnd(-30,-14)};--fall:${rnd(-6,10)};--r:${rnd(-30,30)}deg;--t:${rnd(1.4,1.9)}s;--d:${i*.05}s`});
+ fxAdd('<div class="flash g"></div>');fxAdd('<div class="plus">+1</div>');
+ const sp=$('#scP');sp.classList.remove('bump');void sp.offsetWidth;sp.classList.add('bump');snd('ok')}
+function fxNo(){
+ fxAdd('<div class="flash r"></div>');
+ for(let i=0;i<9;i++){const e=fxAdd('<i class="dr">💧</i>');e.style.left=rnd(43,59)+'%';e.style.setProperty('--t',rnd(1.1,1.7)+'s');e.style.setProperty('--d',rnd(0,.5)+'s')}
+ const g=$('#game');g.classList.remove('shk');void g.offsetWidth;g.classList.add('shk');snd('no')}
+function run(){clearInterval(tick);tick=setInterval(()=>{left--;drawT();if(left<=0){clearInterval(tick);settle(-1)}},1000)}
+function loadQ(){
+ const q=qs[qi];sel=-1;locked=false;fxClear();syncFill('game');$('#stg').textContent=q.stage||'';
+ const s=$('#say');s.innerHTML=q.img?'<div class="sw"><img src="'+q.img+'" alt=""><span>'+q.text+'</span></div>':q.text;fitSay();
+ ['A','B'].forEach((k,i)=>{const b=$('#bk'+k);b.className='hit bk';b.setAttribute('aria-pressed','false');
+  $('#ic'+k).innerHTML=q.choices[i].icon;$('#lb'+k).innerHTML='ตะกร้า:<br>'+q.choices[i].label});
+ fitLb();
+ const g=$('#go');g.textContent='ตอบ!';g.disabled=true;left=TIME_PER_QUESTION;drawT();run();
+}
+function fit(){const e=$('#score');e.textContent=score;e.style.fontSize=String(score).length>=4?'.7em':String(score).length===3?'.85em':''}
+function drawT(){$('#tm').textContent=left;$('#tmP').classList.toggle('low',left<=5)}
+function pick(i){if(locked)return;if(sel!==i)snd('sel');sel=i;['A','B'].forEach((k,j)=>{$('#bk'+k).classList.toggle('sel',j===i);$('#bk'+k).setAttribute('aria-pressed',j===i)});$('#go').disabled=false}
+function settle(c){
+ locked=true;clearInterval(tick);const q=qs[qi],ok=c===q.answer;
+ if(ok){right++;score+=1;fit()}
+ ['A','B'].forEach((k,i)=>{const b=$('#bk'+k);b.classList.remove('sel');if(i===q.answer)b.classList.add('ok');else if(i===c)b.classList.add('no')});
+ $('#game').classList.add(ok?'ok':'no');syncFill('game');ok?fxOk():fxNo();
+ $('#say').textContent=(c===-1?'⏰ หมดเวลา! ':ok?'✅ ถูกต้อง! ':'❌ ยังไม่ใช่นะ ')+(q.explain||'');fitSay();
+ const g=$('#go');g.disabled=false;g.textContent=qi+1<qs.length?'ข้อต่อไป':'ดูผลคะแนน';
+}
+$('#bkA').onclick=()=>pick(0);$('#bkB').onclick=()=>pick(1);
+$('#go').onclick=()=>{if(!locked){settle(sel);return}if(qi+1<qs.length){qi++;loadQ()}else{clearInterval(tick);$('#fs').textContent=Math.round(right/qs.length*100)+'%';$('#fr').textContent='ตอบถูก '+right+' จาก '+qs.length+' ข้อ (ได้ '+score+' คะแนน)';show('end')}};
+$('#start').onclick=startGame;$('#again').onclick=startGame;$('#home').onclick=()=>show('menu');
+const how=()=>modal('<h2>วิธีการเล่น</h2><ol><li>ฟังเภสัชกรเล่าอาการของลูกค้า</li><li>แตะตะกร้าที่ตรงกับโรคหรือยา</li><li>กด “ตอบ!” ก่อนหมดเวลา</li><li>ตอบถูกข้อละ 1 คะแนน และสรุปผลเป็นเปอร์เซ็นต์ตอนจบเกม</li></ol><button class="btn o" data-a="cl">เข้าใจแล้ว</button>');
+$('#how').onclick=how;$('#how2').onclick=how;
+$('#pause').onclick=()=>{clearInterval(tick);modal('<h2>พักเกม</h2><div class="row"><button class="btn o" data-a="rs">เล่นต่อ</button><button class="btn b" data-a="qt">กลับเมนู</button></div>')};
+document.addEventListener('click',e=>{const a=e.target.dataset&&e.target.dataset.a;if(!a)return;closeModal();
+ if(a==='rs'&&!locked)run();if(a==='qt'){clearInterval(tick);show('menu')}});
+
+/* ===== เต็มจอ / ทุกแพลตฟอร์ม ===== */
+syncFill('load');
+new ResizeObserver(()=>{fitSay();fitLb()}).observe($('#stage'));
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{fitSay();fitLb()});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+const de=document.documentElement,fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement,fsb=$('#fsb');
+const canFs=!!(de.requestFullscreen||de.webkitRequestFullscreen);
+if(!canFs||matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches)fsb.hidden=true;
+async function toggleFs(){
+ try{
+  if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document);try{screen.orientation.unlock()}catch(e){}}
+  else{await(de.requestFullscreen?de.requestFullscreen({navigationUI:'hide'}):de.webkitRequestFullscreen());try{await screen.orientation.lock('landscape')}catch(e){}}
+ }catch(e){}
+}
+fsb.onclick=toggleFs;
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{const on=!!fsEl();fsb.classList.toggle('on',on);fsb.setAttribute('aria-label',on?'ออกจากเต็มจอ':'เต็มจอ')}));
+/* คีย์บอร์ด: ←/→ หรือ A/D เลือกตะกร้า, Enter/Space ตอบ, F เต็มจอ */
+document.addEventListener('keydown',e=>{
+ if(e.ctrlKey||e.metaKey||e.altKey)return;
+ const k=e.key;
+ if(k==='f'||k==='F'){if(!fsb.hidden)toggleFs();return}
+ if(k==='m'||k==='M'){$('#snb').click();return}
+ if($('#modal').classList.contains('on')||$('#end').classList.contains('on'))return;
+ if($('#menu').classList.contains('on')){if((k==='Enter'||k===' ')&&document.activeElement===document.body){e.preventDefault();startGame()}return}
+ if(!$('#game').classList.contains('on'))return;
+ if(!locked){if(k==='ArrowLeft'||k==='a'||k==='A')pick(0);if(k==='ArrowRight'||k==='d'||k==='D')pick(1)}
+ if((k==='Enter'||k===' ')&&document.activeElement===document.body){const g=$('#go');if(!g.disabled){e.preventDefault();g.click()}}
+});
+</script>
+</body>
+</html>
