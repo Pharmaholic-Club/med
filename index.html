@@ -52,7 +52,7 @@ button:focus-visible{outline:4px solid #1f6fd1;outline-offset:2px}
 .say.sm{font-size:max(10px,1.65cqw)}.say.xs{font-size:max(9px,1.35cqw)}
 .ic img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;pointer-events:none}
 .ic{background:linear-gradient(#feeed5,#fbecce);font-size:max(28px,6.2cqw);border-radius:1.2cqw}
-.lb{background:#f6e5c7;color:#5a3a22;font:600 max(10px,2.1cqw)/1.3 'Mitr','Mali',sans-serif;border-radius:.8cqw;padding:0 .3cqw}
+.lb{background:#f6e5c7;color:#5a3a22;font:600 max(10px,2.1cqw)/1.2 'Mitr','Mali',sans-serif;border-radius:.8cqw;padding:.2cqw .4cqw;overflow:hidden;word-break:keep-all;overflow-wrap:normal}
 .bk{border-radius:0}.bk:hover,.bk:active{background:none}.bk::after{content:"";position:absolute;left:0;right:0;top:32.5%;bottom:0;border-radius:10% 10% 45% 45%/16% 16% 55% 55%;pointer-events:none;transition:box-shadow .15s}
 .bk.sel::after{box-shadow:0 0 0 .45cqw #ffd45e,0 0 2.2cqw .5cqw rgba(255,212,94,.85)}
 .bk.ok::after{box-shadow:0 0 0 .45cqw #3f9b4f,0 0 2.2cqw .5cqw rgba(111,211,127,.85)}
@@ -132,6 +132,10 @@ function show(id){$$('.scr').forEach(s=>s.classList.toggle('on',s.id===id||(id==
  if(id!=='game')$('#stg').textContent='';syncFill(id)}
 function fitSay(){const s=$('#say');if(!s)return;let f=Math.max(11,$('#stage').clientWidth*.0195);s.style.fontSize=f+'px';
  for(let n=0;n<40&&s.scrollHeight>s.clientHeight+1&&f>8;n++){f*=.94;s.style.fontSize=f+'px'}}
+function fitLb(){const w=$('#stage').clientWidth,els=['lbA','lbB'].map(i=>$('#'+i)).filter(Boolean);let f=Math.max(10,w*.021);
+ const ov=s=>s.scrollHeight>s.clientHeight+1||s.scrollWidth>s.clientWidth+1;
+ els.forEach(s=>s.style.fontSize=f+'px');
+ for(let n=0;n<60&&els.some(ov)&&f>6;n++){f*=.95;els.forEach(s=>s.style.fontSize=f+'px')}}
 function modal(h){$('#mc').innerHTML=h;$('#modal').classList.add('on')}
 function closeModal(){$('#modal').classList.remove('on')}
 
@@ -149,6 +153,7 @@ function loadQ(){
  const s=$('#say');s.textContent=q.text;fitSay();
  ['A','B'].forEach((k,i)=>{const b=$('#bk'+k);b.className='hit bk';b.setAttribute('aria-pressed','false');
   $('#ic'+k).innerHTML=q.choices[i].icon;$('#lb'+k).innerHTML='ตะกร้า:<br>'+q.choices[i].label});
+ fitLb();
  const g=$('#go');g.textContent='ตอบ!';g.disabled=true;left=TIME_PER_QUESTION;drawT();run();
 }
 function fit(){const e=$('#score');e.textContent=score;e.style.fontSize=String(score).length>=4?'.7em':String(score).length===3?'.85em':''}
@@ -172,7 +177,8 @@ document.addEventListener('click',e=>{const a=e.target.dataset&&e.target.dataset
 
 /* ===== เต็มจอ / ทุกแพลตฟอร์ม ===== */
 syncFill('load');
-new ResizeObserver(fitSay).observe($('#stage'));
+new ResizeObserver(()=>{fitSay();fitLb()}).observe($('#stage'));
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{fitSay();fitLb()});
 document.addEventListener('gesturestart',e=>e.preventDefault());
 const de=document.documentElement,fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement,fsb=$('#fsb');
 const canFs=!!(de.requestFullscreen||de.webkitRequestFullscreen);
