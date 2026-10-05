@@ -112,7 +112,7 @@ button:focus-visible{outline:4px solid #1f6fd1;outline-offset:2px}
  </section>
 
  <section id="end" class="scr">
-  <div class="card"><h2>จบเกมแล้ว!</h2><div>คะแนนรวม</div><div class="big" id="fs">0</div>
+  <div class="card"><h2>จบเกมแล้ว!</h2><div>สรุปผลคะแนน</div><div class="big" id="fs">0</div>
    <p id="fr" style="margin:4px 0 12px"></p>
    <div class="row"><button class="btn o" id="again">เล่นอีกครั้ง</button><button class="btn b" id="home">กลับเมนู</button></div></div>
  </section>
@@ -161,15 +161,15 @@ function drawT(){$('#tm').textContent=left;$('#tmP').classList.toggle('low',left
 function pick(i){if(locked)return;sel=i;['A','B'].forEach((k,j)=>{$('#bk'+k).classList.toggle('sel',j===i);$('#bk'+k).setAttribute('aria-pressed',j===i)});$('#go').disabled=false}
 function settle(c){
  locked=true;clearInterval(tick);const q=qs[qi],ok=c===q.answer;
- if(ok){right++;score+=10+Math.max(0,left);fit()}
+ if(ok){right++;score+=1;fit()}
  ['A','B'].forEach((k,i)=>{const b=$('#bk'+k);b.classList.remove('sel');if(i===q.answer)b.classList.add('ok');else if(i===c)b.classList.add('no')});
  $('#say').textContent=(c===-1?'⏰ หมดเวลา! ':ok?'✅ ถูกต้อง! ':'❌ ยังไม่ใช่นะ ')+(q.explain||'');fitSay();
  const g=$('#go');g.disabled=false;g.textContent=qi+1<qs.length?'ข้อต่อไป':'ดูผลคะแนน';
 }
 $('#bkA').onclick=()=>pick(0);$('#bkB').onclick=()=>pick(1);
-$('#go').onclick=()=>{if(!locked){settle(sel);return}if(qi+1<qs.length){qi++;loadQ()}else{clearInterval(tick);$('#fs').textContent=score;$('#fr').textContent='ตอบถูก '+right+' จาก '+qs.length+' ข้อ';show('end')}};
+$('#go').onclick=()=>{if(!locked){settle(sel);return}if(qi+1<qs.length){qi++;loadQ()}else{clearInterval(tick);$('#fs').textContent=Math.round(right/qs.length*100)+'%';$('#fr').textContent='ตอบถูก '+right+' จาก '+qs.length+' ข้อ (ได้ '+score+' คะแนน)';show('end')}};
 $('#start').onclick=startGame;$('#again').onclick=startGame;$('#home').onclick=()=>show('menu');
-const how=()=>modal('<h2>วิธีการเล่น</h2><ol><li>ฟังเภสัชกรเล่าอาการของลูกค้า</li><li>แตะตะกร้าที่ตรงกับโรคหรือยา</li><li>กด “ตอบ!” ก่อนหมดเวลา</li><li>ตอบเร็วได้คะแนนโบนัสเพิ่ม</li></ol><button class="btn o" data-a="cl">เข้าใจแล้ว</button>');
+const how=()=>modal('<h2>วิธีการเล่น</h2><ol><li>ฟังเภสัชกรเล่าอาการของลูกค้า</li><li>แตะตะกร้าที่ตรงกับโรคหรือยา</li><li>กด “ตอบ!” ก่อนหมดเวลา</li><li>ตอบถูกข้อละ 1 คะแนน และสรุปผลเป็นเปอร์เซ็นต์ตอนจบเกม</li></ol><button class="btn o" data-a="cl">เข้าใจแล้ว</button>');
 $('#how').onclick=how;$('#how2').onclick=how;
 $('#pause').onclick=()=>{clearInterval(tick);modal('<h2>พักเกม</h2><div class="row"><button class="btn o" data-a="rs">เล่นต่อ</button><button class="btn b" data-a="qt">กลับเมนู</button></div>')};
 document.addEventListener('click',e=>{const a=e.target.dataset&&e.target.dataset.a;if(!a)return;closeModal();
