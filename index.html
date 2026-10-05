@@ -125,7 +125,7 @@ button:focus-visible{outline:4px solid #1f6fd1;outline-offset:2px}
 <script src="questions.js"></script>
 <script>
 /* โจทย์ทั้งหมดอยู่ในไฟล์ questions.js */
-if(typeof QUESTIONS==="undefined"){document.addEventListener("DOMContentLoaded",()=>alert("ไม่พบไฟล์ questions.js — ให้วางไว้โฟลเดอร์เดียวกับ index.html"));window.QUESTIONS=[];window.TIME_PER_QUESTION=30}
+if(typeof QUESTIONS==="undefined"){document.addEventListener("DOMContentLoaded",()=>alert("ไม่พบไฟล์ questions.js — ให้วางไว้โฟลเดอร์เดียวกับ index.html"));window.QUESTIONS=[];window.TIME_PER_QUESTION=120}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function syncFill(id){const el=document.getElementById(id==='end'?'game':id);if(el)$('#fill').style.backgroundImage=getComputedStyle(el).backgroundImage}
 function show(id){$$('.scr').forEach(s=>s.classList.toggle('on',s.id===id||(id==='end'&&s.id==='game')));
